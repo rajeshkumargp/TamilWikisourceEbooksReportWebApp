@@ -26,7 +26,7 @@ for aFormat in allFormats:
     aBookDetail[aFormat] = 0
 
 aCSVLine = aCSVLine + ',' + ','.join([ aform 
-                   for aform in allFormats]) + "\n"
+                   for aform in allFormats]) + ",Total\n" 
 
 outfile.write(aCSVLine)
 
@@ -45,16 +45,23 @@ for aline in ReportList:
     if aBookDetail["title"] == None :
        
        aBookDetail["title"] = booktitle
+       
        aBookDetail[bookformat] = bookcount
+       
+       aBookDetail["total"] = 0 
+       aBookDetail["total"] =  aBookDetail["total"] + bookcount 
+       
     #Reading Same book detail and populating Dictionary  
     elif aBookDetail["title"] ==  booktitle :
        aBookDetail[bookformat] = bookcount
+       aBookDetail["total"] =  aBookDetail["total"] + bookcount 
+       
     #Reading Differnt Book,Processing Dict Contents and Write to File
     else:
        aCSVLine = aBookDetail["title"]
 
        aCSVLine = aCSVLine + ',' + ','.join([ str(aBookDetail[aform]) 
-                   for aform in allFormats]) + "\n"
+                   for aform in allFormats]) + "," + str(aBookDetail["total"] )+"\n"
        # Write to a File
        #print(aCSVLine.encode('utf-8'))
        outfile.write(str(aCSVLine.encode('utf-8'))) 
@@ -64,10 +71,12 @@ for aline in ReportList:
        aBookDetail["title"] = booktitle
     
        aBookDetail[bookformat] = bookcount
+       aBookDetail["total"] = 0 
+       aBookDetail["total"] =  aBookDetail["total"] + bookcount 
   
 aCSVLine = aBookDetail["title"]
 aCSVLine = aCSVLine +',' + ','.join([str(aBookDetail[aform]) 
-             for aform in allFormats])+"\n"
+             for aform in allFormats])+"," + str(aBookDetail["total"] )+"\n"
 
 # Writing Last Book Details
 #print(aCSVLine)
