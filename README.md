@@ -1,3 +1,21 @@
+.  Download reports for Tamil Wikisource Ebooks
+
+http://ta.wikisource is providing ebooks downloads.
+
+In this database, all language wiki source ebook downloads are stored.
+
+http://tools.wmflabs.org/wsexport/logs.sqlite
+
+Create a web application or command line application to get the details of tamil books and create a download
+count report for each book.
+
+Create similar report as http://freetamilebooks.com/htmlbooks/download-report.html
+
+
+************************************************************************************
+
+
+
 # CSV to HTML Table
 
 Display any CSV file as a searchable, filterable, pretty HTML table. Done in 100% JavaScript.
