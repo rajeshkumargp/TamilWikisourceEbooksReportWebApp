@@ -1,14 +1,26 @@
 # -*- coding: utf-8 -*-
 import sqlite3
-import wget
 import shutil 
+import requests
+import time
+from time import gmtime, strftime
 
 sqlite_file_Url  = "http://tools.wmflabs.org/wsexport/logs.sqlite"
-sqlite_file = wget.download(sqlite_file_Url) 
+#sqlite_file = wget.download(sqlite_file_Url) 
 
-#sqlite_file = 'logsApr01.sqlite'
+sqlite_file = sqlite_file_Url.split('/')[-1]
+r = requests.get(sqlite_file_Url, stream=True)
+with open(sqlite_file, 'wb') as f:
+    for chunk in r.iter_content(chunk_size=1024): 
+        if chunk:
+            f.write(chunk)
+
+#sqlite_file = 'data/logs.sqlite'
 conn = sqlite3.connect(sqlite_file)
 c = conn.cursor()
+
+overallDwndCount = 0 
+timestamp = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
 query = "SELECT TITLE,FORMAT,COUNT(*) as DWDCNT FROM CREATION where lang='ta' GROUP BY TITLE,FORMAT  ;"
 
@@ -65,6 +77,8 @@ for aline in ReportList:
        # Write to a File
        #print(aCSVLine.encode('utf-8'))
        outfile.write(str(aCSVLine.encode('utf-8'))) 
+   
+       overallDwndCount = overallDwndCount + aBookDetail["total"]
 
        for aFormat in allFormats:
            aBookDetail[aFormat] = 0 
@@ -78,8 +92,19 @@ aCSVLine = aBookDetail["title"]
 aCSVLine = aCSVLine +',' + ','.join([str(aBookDetail[aform]) 
              for aform in allFormats])+"," + str(aBookDetail["total"] )+"\n"
 
+overallDwndCount = overallDwndCount + aBookDetail["total"]
+
 # Writing Last Book Details
 #print(aCSVLine)
 outfile.write(str(aCSVLine.encode('utf-8')))
 outfile.close()
 shutil.move('logs.sqlite','data/logs.sqlite')
+shutil.move('report.csv','data/report.csv')
+
+
+total_time = open('data/time_total.html','w')
+total_time.write('<link href="../css/bootstrap.min.css" rel="stylesheet">\n')
+total_time.write("<p align='right'> இந்தப் பட்டியல் தினமும் ஒரு முறை இற்றைப்படுத்தப்படுகிறது. கடைசி இற்றை நேரம்   " + timestamp + " GMT  <br/>")
+total_time.write(" மொத்தப் பதிவிறக்கங்கள் =   " + str(overallDwndCount) + "</p>")
+total_time.close()
+

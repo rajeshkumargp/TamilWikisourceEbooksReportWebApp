@@ -24,6 +24,8 @@
     <div class="container-fluid">
 
       <h2>Download reports for Tamil Wikisource Ebooks</h2>
+      <p> தமிழ் விக்கி மின்னூல்கள் பதிவிறக்க அறிக்கை </p>
+        <iframe style="width:100%; height:50px;"  frameBorder="0" scrolling="no" src="data/time_total.html"></iframe>
 
       <p>Display any CSV file as a searchable, filterable, pretty HTML table. Done in 100% JavaScript. <a href='https://github.com/rajeshkumargp/TamilWikisourceEbooksReportWebApp'>Code on GitHub</a>.</p>
 
@@ -53,7 +55,7 @@
     <script type="text/javascript">
       function format_link(link){
         if (link)
-          return "<a href='" + link + "' target='_blank'>" + link + "</a>";
+          return "<a href=https://ta.wikisource.org/wiki/" + link + " target='_blank'>" + link + "</a>";
         else
           return "";
       }
@@ -63,8 +65,10 @@
         element: 'table-container', 
         allow_download: true,
         csv_options: {separator: ',', delimiter: '"'},
-        datatables_options: {"paging": true, "order": [[ 5, "desc" ]]}
+        datatables_options: {"paging": true, "order": [[ 5, "desc" ]]},
+        custom_formatting: [[0, format_link]]
               });
     </script>
+
   </body>
 </html>
